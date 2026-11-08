@@ -1,0 +1,171 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">VISÃO GERAL</span>
+      <h1 class="page-title">{{ saudacao() }}, {{ usuario()?.nome?.split(' ')?.[0] }}</h1>
+      <p class="page-subtitle">Acompanhe a situação dos chamados de TI da instituição.</p>
+    </div>
+    <a class="btn btn-primary" routerLink="/chamados/novo">
+      <mat-icon>add</mat-icon>
+      Abrir chamado
+    </a>
+  </header>
+
+  @if (erro()) {
+    <div class="status-msg error error-row">
+      <span>{{ erro() }}</span>
+      <button class="btn btn-ghost btn-sm" type="button" (click)="carregar()">Tentar novamente</button>
+    </div>
+  }
+
+  @if (carregando()) {
+    <div class="card loading"><span class="spinner"></span>Carregando indicadores...</div>
+  } @else if (dados(); as d) {
+    <section class="stats">
+      <article class="stat">
+        <span class="stat-icon blue"><mat-icon>confirmation_number</mat-icon></span>
+        <div><span>Total de chamados</span><strong>{{ d.total }}</strong></div>
+      </article>
+      <article class="stat">
+        <span class="stat-icon sky"><mat-icon>inbox</mat-icon></span>
+        <div><span>Abertos</span><strong>{{ d.abertos }}</strong></div>
+      </article>
+      <article class="stat">
+        <span class="stat-icon amber"><mat-icon>autorenew</mat-icon></span>
+        <div><span>Em andamento</span><strong>{{ d.emAndamento }}</strong></div>
+      </article>
+      <article class="stat">
+        <span class="stat-icon green"><mat-icon>task_alt</mat-icon></span>
+        <div><span>Resolvidos</span><strong>{{ d.resolvidos }}</strong></div>
+      </article>
+      <article class="stat">
+        <span class="stat-icon red"><mat-icon>priority_high</mat-icon></span>
+        <div><span>Prioridade crítica</span><strong>{{ d.criticos }}</strong></div>
+      </article>
+      <article class="stat">
+        <span class="stat-icon violet"><mat-icon>timer_off</mat-icon></span>
+        <div><span>SLA violado</span><strong>{{ d.slaViolados }}</strong></div>
+      </article>
+    </section>
+
+    <section class="panels">
+      <article class="card panel">
+        <header class="panel-head">
+          <div>
+            <span class="eyebrow">DISTRIBUIÇÃO</span>
+            <h2>Chamados por categoria</h2>
+          </div>
+          <span class="panel-tag">{{ d.total }} no total</span>
+        </header>
+
+        <div class="bars">
+          @for (item of d.porCategoria; track item.chave) {
+            <div class="bar-row">
+              <span class="bar-label">{{ rotuloCategoria(item.chave) }}</span>
+              <div class="bar-track">
+                <span class="bar-fill" [style.width.%]="percentualCategoria(item.total)"></span>
+              </div>
+              <strong>{{ item.total }}</strong>
+            </div>
+          }
+        </div>
+      </article>
+
+      <article class="card panel">
+        <header class="panel-head">
+          <div>
+            <span class="eyebrow">PRIORIDADES</span>
+            <h2>Volume por prioridade</h2>
+          </div>
+        </header>
+
+        <div class="priority-list">
+          @for (item of d.porPrioridade; track item.chave) {
+            <div class="priority-row">
+              <span class="badge {{ prioridadeClasse(item.chave) }}">
+                {{ rotuloPrioridade(item.chave) }}
+              </span>
+              <strong>{{ item.total }}</strong>
+            </div>
+          }
+        </div>
+
+        <div class="resolution">
+          <div
+            class="resolution-ring"
+            [style.background]="
+              'conic-gradient(var(--accent) 0 ' +
+              d.percentualResolvidos +
+              '%, #e8eff5 ' +
+              d.percentualResolvidos +
+              '% 100%)'
+            "
+          >
+            <span>{{ d.percentualResolvidos }}%</span>
+          </div>
+          <div>
+            <strong>Taxa de resolução</strong>
+            <p>{{ d.resolvidos + d.fechados }} de {{ d.total }} chamados já foram concluídos.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card panel recent">
+      <header class="panel-head">
+        <div>
+          <span class="eyebrow">ÚLTIMAS MOVIMENTAÇÕES</span>
+          <h2>Chamados recentes</h2>
+        </div>
+        <a class="btn btn-ghost btn-sm" routerLink="/chamados">
+          Ver todos
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </header>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Protocolo</th>
+              <th>Assunto</th>
+              <th>Solicitante</th>
+              <th>Prioridade</th>
+              <th>Status</th>
+              <th>Abertura</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (chamado of d.recentes; track chamado.id) {
+              <tr>
+                <td>
+                  <a class="protocol" [routerLink]="['/chamados', chamado.id]">{{ chamado.protocolo }}</a>
+                </td>
+                <td>
+                  <a class="subject" [routerLink]="['/chamados', chamado.id]">{{ chamado.titulo }}</a>
+                  <small>{{ categoriaRotulo[chamado.categoria] }}</small>
+                </td>
+                <td>{{ chamado.solicitanteNome }}</td>
+                <td>
+                  <span class="badge {{ prioridadeClass(chamado.prioridade) }}">
+                    {{ prioridadeRotulo[chamado.prioridade] }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge {{ statusClass(chamado.status) }}">
+                    {{ statusRotulo[chamado.status] }}
+                  </span>
+                </td>
+                <td class="date">{{ formatarData(chamado.dataAbertura) }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="empty-state" colspan="6">Nenhum chamado registrado até o momento.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>

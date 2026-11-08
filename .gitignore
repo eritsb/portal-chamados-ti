@@ -1,0 +1,22 @@
+# Dependencias e builds
+node_modules/
+dist/
+target/
+out-tsc/
+.angular/
+
+# Ferramentas e editores
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs e variaveis locais
+*.log
+.env
+.env.local
+
+# Bancos locais
+*.mv.db
+*.trace.db

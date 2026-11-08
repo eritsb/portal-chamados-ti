@@ -1,0 +1,143 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <a class="back-link" routerLink="/chamados">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar para chamados
+      </a>
+      <span class="eyebrow">{{ editando() ? 'ATUALIZAÇÃO' : 'NOVO REGISTRO' }}</span>
+      <h1 class="page-title">{{ editando() ? 'Editar chamado' : 'Abrir novo chamado' }}</h1>
+      <p class="page-subtitle">
+        {{
+          editando()
+            ? 'Atualize as informações do chamado selecionado.'
+            : 'Descreva o problema com o máximo de detalhes para agilizar o atendimento.'
+        }}
+      </p>
+    </div>
+  </header>
+
+  @if (erro()) {
+    <div class="status-msg error">{{ erro() }}</div>
+  }
+
+  @if (carregando()) {
+    <div class="card loading"><span class="spinner"></span>Carregando chamado...</div>
+  } @else {
+    <form class="card form-card" (ngSubmit)="salvar()">
+      <section class="form-section">
+        <header>
+          <span class="section-number">01</span>
+          <div>
+            <h2>Informações do chamado</h2>
+            <p>Identifique o assunto e a categoria do problema.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label class="field span-2">
+            <span>Título do chamado *</span>
+            <input
+              type="text"
+              name="titulo"
+              [(ngModel)]="chamado.titulo"
+              maxlength="160"
+              placeholder="Ex.: Computador não liga após queda de energia"
+            />
+          </label>
+
+          <label class="field span-2">
+            <span>Descrição detalhada *</span>
+            <textarea
+              name="descricao"
+              [(ngModel)]="chamado.descricao"
+              maxlength="2000"
+              rows="5"
+              placeholder="Descreva o que está acontecendo, mensagens de erro e quando o problema começou."
+            ></textarea>
+            <small>Inclua o máximo de contexto possível. Isso ajuda a equipe de TI a resolver mais rápido.</small>
+          </label>
+
+          <label class="field">
+            <span>Categoria *</span>
+            <select name="categoria" [(ngModel)]="chamado.categoria">
+              @for (opcao of categoriaOpcoes; track opcao.valor) {
+                <option [ngValue]="opcao.valor">{{ opcao.rotulo }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Prioridade *</span>
+            <select name="prioridade" [(ngModel)]="chamado.prioridade">
+              @for (opcao of prioridadeOpcoes; track opcao.valor) {
+                <option [ngValue]="opcao.valor">{{ opcao.rotulo }}</option>
+              }
+            </select>
+            <small>
+              SLA estimado: crítica 4h · alta 8h · média 24h · baixa 72h.
+            </small>
+          </label>
+
+          <label class="field">
+            <span>Local / setor</span>
+            <input
+              type="text"
+              name="local"
+              [(ngModel)]="chamado.local"
+              maxlength="120"
+              placeholder="Ex.: Secretaria Acadêmica - Sala 12"
+            />
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <header>
+          <span class="section-number">02</span>
+          <div>
+            <h2>Envolvidos</h2>
+            <p>Defina quem abriu o chamado e, se já souber, o técnico responsável.</p>
+          </div>
+        </header>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>Solicitante *</span>
+            <select name="solicitanteId" [(ngModel)]="chamado.solicitanteId">
+              <option [ngValue]="0" disabled>Selecione um usuário</option>
+              @for (usuario of usuarios(); track usuario.id) {
+                <option [ngValue]="usuario.id">{{ usuario.nome }} · {{ usuario.setor }}</option>
+              }
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Técnico responsável</span>
+            <select name="tecnicoId" [(ngModel)]="chamado.tecnicoId">
+              <option [ngValue]="null">Não atribuído</option>
+              @for (usuario of usuarios(); track usuario.id) {
+                @if (usuario.perfil !== 'SOLICITANTE') {
+                  <option [ngValue]="usuario.id">{{ usuario.nome }} · {{ usuario.setor }}</option>
+                }
+              }
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <footer class="form-footer">
+        <a class="btn btn-ghost" routerLink="/chamados">Cancelar</a>
+        <button class="btn btn-primary" type="submit" [disabled]="salvando()">
+          @if (salvando()) {
+            <span class="spinner"></span>
+            Salvando...
+          } @else {
+            <mat-icon>{{ editando() ? 'save' : 'send' }}</mat-icon>
+            {{ editando() ? 'Salvar alterações' : 'Registrar chamado' }}
+          }
+        </button>
+      </footer>
+    </form>
+  }
+</div>

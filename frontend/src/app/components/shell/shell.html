@@ -1,0 +1,76 @@
+<div class="layout">
+  <aside class="sidebar" [class.open]="menuAberto()">
+    <div class="brand">
+      <span class="brand-mark">TI</span>
+      <div class="brand-text">
+        <strong>Chamados TI</strong>
+        <span>Serviço público</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <span class="nav-label">Painel</span>
+      <a routerLink="/dashboard" routerLinkActive="active" (click)="fecharMenu()">
+        <mat-icon>space_dashboard</mat-icon>
+        Dashboard
+      </a>
+      <a
+        routerLink="/chamados"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="fecharMenu()"
+      >
+        <mat-icon>confirmation_number</mat-icon>
+        Chamados
+      </a>
+
+      <span class="nav-label">Atalhos</span>
+      <a routerLink="/chamados/novo" routerLinkActive="active" (click)="fecharMenu()">
+        <mat-icon>add_circle</mat-icon>
+        Abrir chamado
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="help-card">
+        <mat-icon>support_agent</mat-icon>
+        <div>
+          <strong>Precisa de ajuda?</strong>
+          <span>Abra um chamado e nossa equipe de TI atenderá você.</span>
+        </div>
+      </div>
+      <span class="version">Portal de Chamados · v1.0</span>
+    </div>
+  </aside>
+
+  <div class="overlay" [class.show]="menuAberto()" (click)="fecharMenu()"></div>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" type="button" (click)="alternarMenu()" aria-label="Abrir menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div class="topbar-title">
+        <span class="dot"></span>
+        Portal de Chamados de TI
+      </div>
+
+      @if (usuario(); as user) {
+        <div class="user-area">
+          <span class="avatar">{{ iniciais() }}</span>
+          <span class="user-info">
+            <strong>{{ user.nome }}</strong>
+            <span>{{ perfilRotulo[user.perfil] }} · {{ user.setor }}</span>
+          </span>
+          <button class="icon-btn" type="button" (click)="sair()" title="Sair">
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      }
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

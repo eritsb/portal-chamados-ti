@@ -1,0 +1,104 @@
+<div class="login-page">
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="brand-mark">TI</span>
+      <span>Serviço de Tecnologia da Informação</span>
+    </div>
+
+    <div class="hero-content">
+      <span class="eyebrow">INSTITUIÇÃO PÚBLICA</span>
+      <h1>Portal de<br />Chamados de TI</h1>
+      <p>
+        Abra, acompanhe e resolva solicitações de suporte técnico em um só lugar. Mais agilidade
+        para quem precisa e mais controle para a equipe de TI.
+      </p>
+
+      <div class="hero-features">
+        <div>
+          <mat-icon>confirmation_number</mat-icon>
+          <span><strong>Abertura de chamados</strong>Registre o problema com categoria e prioridade.</span>
+        </div>
+        <div>
+          <mat-icon>timeline</mat-icon>
+          <span><strong>Acompanhamento em tempo real</strong>Veja status, responsável e histórico.</span>
+        </div>
+        <div>
+          <mat-icon>monitoring</mat-icon>
+          <span><strong>Gestão e indicadores</strong>Painel com SLA, prioridades e categorias.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-footer">
+      <span>Atendimento das 8h às 17h</span>
+      <span>suporte.ti@instituicao.gov.br</span>
+    </div>
+  </section>
+
+  <section class="form-area">
+    <form class="login-card" (ngSubmit)="entrar()">
+      <div class="login-header">
+        <span class="eyebrow">ACESSO AO PORTAL</span>
+        <h2>Bem-vindo de volta</h2>
+        <p>Entre com seu e-mail institucional para continuar.</p>
+      </div>
+
+      <label class="field">
+        <span>E-mail institucional</span>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="seu.nome@instituicao.gov.br"
+          autocomplete="username"
+        />
+      </label>
+
+      <label class="field">
+        <span>Senha</span>
+        <input
+          type="password"
+          name="senha"
+          [(ngModel)]="senha"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <small>Ambiente acadêmico: a autenticação é simulada por e-mail.</small>
+      </label>
+
+      @if (erro()) {
+        <p class="status-msg error">{{ erro() }}</p>
+      }
+
+      <button class="btn btn-primary btn-enter" type="submit" [disabled]="carregando()">
+        @if (carregando()) {
+          <span class="spinner"></span>
+          Entrando...
+        } @else {
+          Entrar no portal
+          <mat-icon>arrow_forward</mat-icon>
+        }
+      </button>
+
+      <div class="demo">
+        <span class="demo-title">Contas de demonstração</span>
+        <div class="demo-list">
+          @for (usuario of usuariosDemo(); track usuario.id) {
+            <button type="button" class="demo-user" (click)="usarConta(usuario)">
+              <span class="demo-avatar">{{ iniciais(usuario.nome) }}</span>
+              <span class="demo-info">
+                <strong>{{ usuario.nome }}</strong>
+                <small>{{ perfilRotulo[usuario.perfil] }}</small>
+              </span>
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          } @empty {
+            <p class="demo-empty">Inicie o backend para carregar as contas de demonstração.</p>
+          }
+        </div>
+      </div>
+    </form>
+
+    <p class="login-footer">© {{ anoAtual }} · Portal de Chamados de TI · Projeto acadêmico</p>
+  </section>
+</div>
