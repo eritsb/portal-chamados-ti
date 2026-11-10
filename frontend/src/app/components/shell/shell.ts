@@ -21,6 +21,7 @@ export class Shell {
     return usuario ? iniciais(usuario.nome) : 'TI';
   });
   readonly ehSolicitante = computed(() => this.usuario()?.perfil === 'SOLICITANTE');
+  readonly podeVerDashboard = computed(() => this.usuario()?.perfil === 'ADMINISTRADOR');
   readonly perfilRotulo = PERFIL_ROTULO;
 
   alternarMenu(): void {

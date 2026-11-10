@@ -23,10 +23,12 @@
         </a>
       } @else {
         <span class="nav-label">Painel</span>
-        <a routerLink="/dashboard" routerLinkActive="active" (click)="fecharMenu()">
-          <mat-icon>space_dashboard</mat-icon>
-          Dashboard
-        </a>
+        @if (podeVerDashboard()) {
+          <a routerLink="/dashboard" routerLinkActive="active" (click)="fecharMenu()">
+            <mat-icon>space_dashboard</mat-icon>
+            Dashboard
+          </a>
+        }
         <a
           routerLink="/chamados"
           routerLinkActive="active"
@@ -37,11 +39,13 @@
           Chamados
         </a>
 
-        <span class="nav-label">Atalhos</span>
-        <a routerLink="/chamados/novo" routerLinkActive="active" (click)="fecharMenu()">
-          <mat-icon>add_circle</mat-icon>
-          Abrir chamado
-        </a>
+        @if (podeVerDashboard()) {
+          <span class="nav-label">Atalhos</span>
+          <a routerLink="/chamados/novo" routerLinkActive="active" (click)="fecharMenu()">
+            <mat-icon>add_circle</mat-icon>
+            Abrir chamado
+          </a>
+        }
       }
     </nav>
 
