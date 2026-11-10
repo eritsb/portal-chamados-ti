@@ -38,8 +38,13 @@ export class ChamadoDetalhe implements OnInit {
   readonly enviandoComentario = signal(false);
 
   readonly usuarioAtual = this.authService.usuario;
+  readonly ehSolicitante = computed(() => this.usuarioAtual()?.perfil === 'SOLICITANTE');
   readonly podeGerenciar = computed(() => this.usuarioAtual()?.perfil !== 'SOLICITANTE');
   readonly podeExcluir = computed(() => this.usuarioAtual()?.perfil === 'ADMINISTRADOR');
+  readonly linkVoltar = computed(() => (this.ehSolicitante() ? '/meus-chamados' : '/chamados'));
+  readonly rotuloVoltar = computed(() =>
+    this.ehSolicitante() ? 'Voltar para meus chamados' : 'Voltar para chamados',
+  );
 
   readonly statusOpcoes = STATUS_OPCOES;
   readonly statusRotulo = STATUS_ROTULO;
@@ -63,10 +68,12 @@ export class ChamadoDetalhe implements OnInit {
 
   ngOnInit(): void {
     this.carregar();
-    this.api.listarUsuarios().subscribe({
-      next: (usuarios) => this.usuarios.set(usuarios),
-      error: () => undefined,
-    });
+    if (this.podeGerenciar()) {
+      this.api.listarUsuarios().subscribe({
+        next: (usuarios) => this.usuarios.set(usuarios),
+        error: () => undefined,
+      });
+    }
   }
 
   carregar(): void {
@@ -79,6 +86,14 @@ export class ChamadoDetalhe implements OnInit {
     this.carregando.set(true);
     this.api.buscarChamado(id).subscribe({
       next: (chamado) => {
+        const usuario = this.usuarioAtual();
+        if (usuario?.perfil === 'SOLICITANTE' && chamado.solicitanteId !== usuario.id) {
+          this.chamado.set(null);
+          this.carregando.set(false);
+          this.erro.set('Você só pode acompanhar os chamados que você abriu.');
+          return;
+        }
+
         this.chamado.set(chamado);
         this.formStatus = {
           status: chamado.status,

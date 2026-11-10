@@ -1,0 +1,74 @@
+.list-card {
+  padding: 18px 18px 4px;
+}
+
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.list-head h2 {
+  margin-top: 4px;
+  color: var(--brand-900);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.protocol {
+  display: inline-block;
+  color: var(--brand-600);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.protocol:hover,
+.subject:hover {
+  text-decoration: underline;
+}
+
+.sla-tag {
+  margin-left: 5px;
+  padding: 3px 6px;
+  font-size: 9px;
+}
+
+.subject {
+  display: block;
+  max-width: 360px;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subject-cell small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.date {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.actions-col {
+  text-align: right;
+}
+
+.empty-state a {
+  color: var(--brand-600);
+  font-weight: 600;
+}
+
+.empty-state a:hover {
+  text-decoration: underline;
+}

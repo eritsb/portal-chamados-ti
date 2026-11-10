@@ -20,6 +20,7 @@ export class Shell {
     const usuario = this.usuario();
     return usuario ? iniciais(usuario.nome) : 'TI';
   });
+  readonly ehSolicitante = computed(() => this.usuario()?.perfil === 'SOLICITANTE');
   readonly perfilRotulo = PERFIL_ROTULO;
 
   alternarMenu(): void {

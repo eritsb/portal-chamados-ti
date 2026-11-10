@@ -1,7 +1,7 @@
 <div class="page">
-  <a class="back-link" routerLink="/chamados">
+  <a class="back-link" [routerLink]="linkVoltar()">
     <mat-icon>arrow_back</mat-icon>
-    Voltar para chamados
+    {{ rotuloVoltar() }}
   </a>
 
   @if (carregando()) {
@@ -27,18 +27,20 @@
           {{ categoriaRotulo[c.categoria] }}
         </p>
       </div>
-      <div class="ticket-actions">
-        <a class="btn btn-ghost" [routerLink]="['/chamados', c.id, 'editar']">
-          <mat-icon>edit</mat-icon>
-          Editar
-        </a>
-        @if (podeExcluir()) {
-          <button class="btn btn-danger" type="button" (click)="excluir()">
-            <mat-icon>delete</mat-icon>
-            Excluir
-          </button>
-        }
-      </div>
+      @if (podeGerenciar()) {
+        <div class="ticket-actions">
+          <a class="btn btn-ghost" [routerLink]="['/chamados', c.id, 'editar']">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </a>
+          @if (podeExcluir()) {
+            <button class="btn btn-danger" type="button" (click)="excluir()">
+              <mat-icon>delete</mat-icon>
+              Excluir
+            </button>
+          }
+        </div>
+      }
     </header>
 
     @if (mensagem()) {
@@ -139,13 +141,13 @@
       </div>
 
       <aside class="detail-side">
-        <section class="card block">
-          <header class="block-head">
-            <span class="eyebrow">GESTÃO</span>
-            <h2>Atualizar atendimento</h2>
-          </header>
+        @if (podeGerenciar()) {
+          <section class="card block">
+            <header class="block-head">
+              <span class="eyebrow">GESTÃO</span>
+              <h2>Atualizar atendimento</h2>
+            </header>
 
-          @if (podeGerenciar()) {
             <form class="status-form" (ngSubmit)="atualizarStatus()">
               <label class="field">
                 <span>Status</span>
@@ -189,12 +191,8 @@
                 }
               </button>
             </form>
-          } @else {
-            <p class="readonly-note">
-              Apenas técnicos e administradores podem alterar o status e o responsável pelo chamado.
-            </p>
-          }
-        </section>
+          </section>
+        }
 
         <section class="card block">
           <header class="block-head">

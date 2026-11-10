@@ -12,3 +12,35 @@ export const authGuard: CanActivateFn = () => {
 
   return router.createUrlTree(['/login']);
 };
+
+export const staffGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const usuario = authService.usuario();
+
+  if (!usuario) {
+    return router.createUrlTree(['/login']);
+  }
+
+  if (usuario.perfil === 'SOLICITANTE') {
+    return router.createUrlTree(['/meus-chamados']);
+  }
+
+  return true;
+};
+
+export const solicitanteGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const usuario = authService.usuario();
+
+  if (!usuario) {
+    return router.createUrlTree(['/login']);
+  }
+
+  if (usuario.perfil !== 'SOLICITANTE') {
+    return router.createUrlTree(['/chamados']);
+  }
+
+  return true;
+};

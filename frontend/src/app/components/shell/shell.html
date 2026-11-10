@@ -9,26 +9,40 @@
     </div>
 
     <nav class="nav">
-      <span class="nav-label">Painel</span>
-      <a routerLink="/dashboard" routerLinkActive="active" (click)="fecharMenu()">
-        <mat-icon>space_dashboard</mat-icon>
-        Dashboard
-      </a>
-      <a
-        routerLink="/chamados"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="fecharMenu()"
-      >
-        <mat-icon>confirmation_number</mat-icon>
-        Chamados
-      </a>
+      @if (ehSolicitante()) {
+        <span class="nav-label">Meus chamados</span>
+        <a routerLink="/meus-chamados" routerLinkActive="active" (click)="fecharMenu()">
+          <mat-icon>confirmation_number</mat-icon>
+          Meus chamados
+        </a>
 
-      <span class="nav-label">Atalhos</span>
-      <a routerLink="/chamados/novo" routerLinkActive="active" (click)="fecharMenu()">
-        <mat-icon>add_circle</mat-icon>
-        Abrir chamado
-      </a>
+        <span class="nav-label">Atalhos</span>
+        <a routerLink="/chamados/novo" routerLinkActive="active" (click)="fecharMenu()">
+          <mat-icon>add_circle</mat-icon>
+          Abrir chamado
+        </a>
+      } @else {
+        <span class="nav-label">Painel</span>
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="fecharMenu()">
+          <mat-icon>space_dashboard</mat-icon>
+          Dashboard
+        </a>
+        <a
+          routerLink="/chamados"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="fecharMenu()"
+        >
+          <mat-icon>confirmation_number</mat-icon>
+          Chamados
+        </a>
+
+        <span class="nav-label">Atalhos</span>
+        <a routerLink="/chamados/novo" routerLinkActive="active" (click)="fecharMenu()">
+          <mat-icon>add_circle</mat-icon>
+          Abrir chamado
+        </a>
+      }
     </nav>
 
     <div class="sidebar-footer">
