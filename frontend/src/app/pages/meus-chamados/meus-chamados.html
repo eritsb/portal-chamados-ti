@@ -1,0 +1,90 @@
+<div class="page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">ACOMPANHAMENTO</span>
+      <h1 class="page-title">Meus chamados</h1>
+      <p class="page-subtitle">
+        Acompanhe o status das solicitações que você abriu para a equipe de TI.
+      </p>
+    </div>
+    <a class="btn btn-primary" routerLink="/chamados/novo">
+      <mat-icon>add</mat-icon>
+      Abrir chamado
+    </a>
+  </header>
+
+  @if (erro()) {
+    <div class="status-msg error">{{ erro() }}</div>
+  }
+
+  @if (carregando()) {
+    <div class="card loading"><span class="spinner"></span>Carregando seus chamados...</div>
+  } @else {
+    <section class="card list-card">
+      <header class="list-head">
+        <div>
+          <span class="eyebrow">HISTÓRICO</span>
+          <h2>{{ total() }} chamado(s) aberto(s) por você</h2>
+        </div>
+      </header>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Protocolo</th>
+              <th>Assunto</th>
+              <th>Prioridade</th>
+              <th>Status</th>
+              <th>Abertura</th>
+              <th class="actions-col">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (chamado of chamados(); track chamado.id) {
+              <tr>
+                <td>
+                  <a class="protocol" [routerLink]="['/meus-chamados', chamado.id]">
+                    {{ chamado.protocolo }}
+                  </a>
+                  @if (chamado.slaViolado) {
+                    <span class="badge b-sla sla-tag">SLA</span>
+                  }
+                </td>
+                <td class="subject-cell">
+                  <a class="subject" [routerLink]="['/meus-chamados', chamado.id]">
+                    {{ chamado.titulo }}
+                  </a>
+                  <small>{{ categoriaRotulo[chamado.categoria] }}</small>
+                </td>
+                <td>
+                  <span class="badge {{ prioridadeClass(chamado.prioridade) }}">
+                    {{ prioridadeRotulo[chamado.prioridade] }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge {{ statusClass(chamado.status) }}">
+                    {{ statusRotulo[chamado.status] }}
+                  </span>
+                </td>
+                <td class="date">{{ formatarData(chamado.dataAbertura) }}</td>
+                <td class="actions-col">
+                  <a class="btn btn-ghost btn-sm" [routerLink]="['/meus-chamados', chamado.id]">
+                    Ver detalhes
+                  </a>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="empty-state" colspan="6">
+                  Você ainda não abriu nenhum chamado.
+                  <a routerLink="/chamados/novo">Abrir meu primeiro chamado</a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+</div>

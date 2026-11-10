@@ -1,9 +1,9 @@
 <div class="page">
   <header class="page-header">
     <div>
-      <a class="back-link" routerLink="/chamados">
+      <a class="back-link" [routerLink]="linkLista()">
         <mat-icon>arrow_back</mat-icon>
-        Voltar para chamados
+        {{ ehSolicitante() ? 'Voltar para meus chamados' : 'Voltar para chamados' }}
       </a>
       <span class="eyebrow">{{ editando() ? 'ATUALIZAÇÃO' : 'NOVO REGISTRO' }}</span>
       <h1 class="page-title">{{ editando() ? 'Editar chamado' : 'Abrir novo chamado' }}</h1>
@@ -92,42 +92,62 @@
         </div>
       </section>
 
-      <section class="form-section">
-        <header>
-          <span class="section-number">02</span>
-          <div>
-            <h2>Envolvidos</h2>
-            <p>Defina quem abriu o chamado e, se já souber, o técnico responsável.</p>
+      @if (ehSolicitante()) {
+        <section class="form-section">
+          <header>
+            <span class="section-number">02</span>
+            <div>
+              <h2>Solicitante</h2>
+              <p>O chamado será registrado em seu nome.</p>
+            </div>
+          </header>
+
+          <div class="requester-box">
+            <mat-icon>person</mat-icon>
+            <div>
+              <strong>{{ usuario()?.nome }}</strong>
+              <span>{{ usuario()?.setor }} · {{ usuario()?.email }}</span>
+            </div>
           </div>
-        </header>
+        </section>
+      } @else {
+        <section class="form-section">
+          <header>
+            <span class="section-number">02</span>
+            <div>
+              <h2>Envolvidos</h2>
+              <p>Defina quem abriu o chamado e, se já souber, o técnico responsável.</p>
+            </div>
+          </header>
 
-        <div class="form-grid">
-          <label class="field">
-            <span>Solicitante *</span>
-            <select name="solicitanteId" [(ngModel)]="chamado.solicitanteId">
-              <option [ngValue]="0" disabled>Selecione um usuário</option>
-              @for (usuario of usuarios(); track usuario.id) {
-                <option [ngValue]="usuario.id">{{ usuario.nome }} · {{ usuario.setor }}</option>
-              }
-            </select>
-          </label>
-
-          <label class="field">
-            <span>Técnico responsável</span>
-            <select name="tecnicoId" [(ngModel)]="chamado.tecnicoId">
-              <option [ngValue]="null">Não atribuído</option>
-              @for (usuario of usuarios(); track usuario.id) {
-                @if (usuario.perfil !== 'SOLICITANTE') {
+          <div class="form-grid">
+            <label class="field">
+              <span>Solicitante *</span>
+              <select name="solicitanteId" [(ngModel)]="chamado.solicitanteId">
+                <option [ngValue]="0" disabled>Selecione um usuário</option>
+                @for (usuario of usuarios(); track usuario.id) {
                   <option [ngValue]="usuario.id">{{ usuario.nome }} · {{ usuario.setor }}</option>
                 }
-              }
-            </select>
-          </label>
-        </div>
-      </section>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Técnico responsável</span>
+              <select name="tecnicoId" [(ngModel)]="chamado.tecnicoId">
+                <option [ngValue]="null">Não atribuído</option>
+                @for (usuario of usuarios(); track usuario.id) {
+                  @if (usuario.perfil !== 'SOLICITANTE') {
+                    <option [ngValue]="usuario.id">{{ usuario.nome }} · {{ usuario.setor }}</option>
+                  }
+                }
+              </select>
+            </label>
+          </div>
+        </section>
+      }
 
       <footer class="form-footer">
-        <a class="btn btn-ghost" routerLink="/chamados">Cancelar</a>
+        <a class="btn btn-ghost" [routerLink]="linkLista()">Cancelar</a>
         <button class="btn btn-primary" type="submit" [disabled]="salvando()">
           @if (salvando()) {
             <span class="spinner"></span>

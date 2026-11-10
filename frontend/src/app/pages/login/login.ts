@@ -28,8 +28,9 @@ export class Login implements OnInit {
   readonly anoAtual = new Date().getFullYear();
 
   ngOnInit(): void {
-    if (this.authService.estaLogado()) {
-      this.router.navigate(['/dashboard']);
+    const usuario = this.authService.usuario();
+    if (usuario) {
+      this.router.navigate([this.destino(usuario)]);
       return;
     }
     this.api.listarUsuarios().subscribe({
@@ -50,7 +51,7 @@ export class Login implements OnInit {
     this.api.login(this.email.trim()).subscribe({
       next: (usuario) => {
         this.authService.login(usuario);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate([this.destino(usuario)]);
       },
       error: () => {
         this.carregando.set(false);
@@ -63,5 +64,9 @@ export class Login implements OnInit {
     this.email = usuario.email;
     this.senha = 'demo';
     this.entrar();
+  }
+
+  private destino(usuario: Usuario): string {
+    return usuario.perfil === 'SOLICITANTE' ? '/meus-chamados' : '/dashboard';
   }
 }
