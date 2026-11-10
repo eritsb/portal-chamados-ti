@@ -67,6 +67,12 @@ export class Login implements OnInit {
   }
 
   private destino(usuario: Usuario): string {
-    return usuario.perfil === 'SOLICITANTE' ? '/meus-chamados' : '/dashboard';
+    if (usuario.perfil === 'SOLICITANTE') {
+      return '/meus-chamados';
+    }
+    if (usuario.perfil === 'TECNICO') {
+      return '/chamados';
+    }
+    return '/dashboard';
   }
 }

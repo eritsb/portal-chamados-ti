@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, solicitanteGuard, staffGuard } from './core/auth.guard';
+import { authGuard, dashboardGuard, solicitanteGuard, staffGuard } from './core/auth.guard';
 import { Shell } from './components/shell/shell';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
@@ -16,7 +16,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: Dashboard, canActivate: [staffGuard] },
+      { path: 'dashboard', component: Dashboard, canActivate: [dashboardGuard] },
       { path: 'meus-chamados', component: MeusChamados, canActivate: [solicitanteGuard] },
       { path: 'meus-chamados/:id', component: ChamadoDetalhe, canActivate: [solicitanteGuard] },
       { path: 'chamados', component: Chamados, canActivate: [staffGuard] },

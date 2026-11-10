@@ -29,6 +29,26 @@ export const staffGuard: CanActivateFn = () => {
   return true;
 };
 
+export const dashboardGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  const usuario = authService.usuario();
+
+  if (!usuario) {
+    return router.createUrlTree(['/login']);
+  }
+
+  if (usuario.perfil === 'SOLICITANTE') {
+    return router.createUrlTree(['/meus-chamados']);
+  }
+
+  if (usuario.perfil === 'TECNICO') {
+    return router.createUrlTree(['/chamados']);
+  }
+
+  return true;
+};
+
 export const solicitanteGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
