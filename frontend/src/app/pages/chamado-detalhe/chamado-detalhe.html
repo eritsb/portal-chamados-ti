@@ -13,17 +13,16 @@
       <div class="ticket-title">
         <div class="ticket-tags">
           <span class="protocol">{{ c.protocolo }}</span>
-          <span class="badge {{ statusClass(c.status) }}">{{ statusRotulo[c.status] }}</span>
-          <span class="badge {{ prioridadeClass(c.prioridade) }}">
-            {{ prioridadeRotulo[c.prioridade] }}
-          </span>
+          <app-status-badge [status]="c.status" />
+          <app-priority-badge [prioridade]="c.prioridade" />
           @if (c.slaViolado) {
             <span class="badge b-sla">SLA violado</span>
           }
         </div>
         <h1 class="page-title">{{ c.titulo }}</h1>
         <p class="ticket-meta">
-          Aberto por <strong>{{ c.solicitanteNome }}</strong> em {{ formatarData(c.dataAbertura) }} ·
+          Aberto por <strong>{{ c.solicitanteNome }}</strong> em
+          {{ formatarData(c.dataAbertura) }} ·
           {{ categoriaRotulo[c.categoria] }}
         </p>
       </div>
@@ -74,44 +73,7 @@
             <span class="counter">{{ c.comentarios.length }} interação(ões)</span>
           </header>
 
-          <div class="timeline">
-            <div class="timeline-item">
-              <span class="timeline-avatar system"><mat-icon>confirmation_number</mat-icon></span>
-              <div class="timeline-body">
-                <div class="timeline-top">
-                  <strong>Chamado aberto</strong>
-                  <span>{{ formatarData(c.dataAbertura) }}</span>
-                </div>
-                <p>{{ c.solicitanteNome }} registrou a solicitação.</p>
-              </div>
-            </div>
-
-            @for (comentario of c.comentarios; track comentario.id) {
-              <div class="timeline-item">
-                <span class="timeline-avatar">{{ iniciais(comentario.autor) }}</span>
-                <div class="timeline-body">
-                  <div class="timeline-top">
-                    <strong>{{ comentario.autor }}</strong>
-                    <span>{{ formatarData(comentario.dataComentario) }}</span>
-                  </div>
-                  <p>{{ comentario.mensagem }}</p>
-                </div>
-              </div>
-            }
-
-            @if (c.dataFechamento) {
-              <div class="timeline-item">
-                <span class="timeline-avatar done"><mat-icon>done_all</mat-icon></span>
-                <div class="timeline-body">
-                  <div class="timeline-top">
-                    <strong>Chamado concluído</strong>
-                    <span>{{ formatarData(c.dataFechamento) }}</span>
-                  </div>
-                  <p>Solicitação finalizada pela equipe de TI.</p>
-                </div>
-              </div>
-            }
-          </div>
+          <app-ticket-timeline [chamado]="c" />
 
           <form class="comment-form" (ngSubmit)="comentar()">
             <label class="field">
@@ -125,7 +87,9 @@
               ></textarea>
             </label>
             <div class="comment-actions">
-              <span class="comment-author">Como <strong>{{ comentario.autor }}</strong></span>
+              <span class="comment-author"
+                >Como <strong>{{ comentario.autor }}</strong></span
+              >
               <button class="btn btn-primary" type="submit" [disabled]="enviandoComentario()">
                 @if (enviandoComentario()) {
                   <span class="spinner"></span>
@@ -148,49 +112,12 @@
               <h2>Atualizar atendimento</h2>
             </header>
 
-            <form class="status-form" (ngSubmit)="atualizarStatus()">
-              <label class="field">
-                <span>Status</span>
-                <select name="status" [(ngModel)]="formStatus.status">
-                  @for (opcao of statusOpcoes; track opcao.valor) {
-                    <option [ngValue]="opcao.valor">{{ opcao.rotulo }}</option>
-                  }
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Técnico responsável</span>
-                <select name="tecnicoId" [(ngModel)]="formStatus.tecnicoId">
-                  <option [ngValue]="null">Não atribuído</option>
-                  @for (usuario of usuarios(); track usuario.id) {
-                    @if (usuario.perfil !== 'SOLICITANTE') {
-                      <option [ngValue]="usuario.id">{{ usuario.nome }}</option>
-                    }
-                  }
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Solução / observação</span>
-                <textarea
-                  name="solucao"
-                  [(ngModel)]="formStatus.solucao"
-                  rows="3"
-                  maxlength="2000"
-                  placeholder="Descreva a solução aplicada, se houver."
-                ></textarea>
-              </label>
-
-              <button class="btn btn-primary full" type="submit" [disabled]="salvandoStatus()">
-                @if (salvandoStatus()) {
-                  <span class="spinner"></span>
-                  Salvando...
-                } @else {
-                  <mat-icon>save</mat-icon>
-                  Salvar atualização
-                }
-              </button>
-            </form>
+            <app-ticket-status-form
+              [chamado]="c"
+              [usuarios]="usuarios()"
+              [salvando]="salvandoStatus()"
+              (salvar)="atualizarStatus($event)"
+            />
           </section>
         }
 
@@ -203,7 +130,9 @@
           <dl class="info-list">
             <div>
               <dt>Solicitante</dt>
-              <dd>{{ c.solicitanteNome }}<small>{{ c.solicitanteSetor }}</small></dd>
+              <dd>
+                {{ c.solicitanteNome }}<small>{{ c.solicitanteSetor }}</small>
+              </dd>
             </div>
             <div>
               <dt>Técnico responsável</dt>

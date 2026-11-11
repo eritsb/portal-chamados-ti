@@ -1,0 +1,51 @@
+<section class="card filters">
+  <form (ngSubmit)="aplicar()">
+    <label class="field search-field">
+      <span>Buscar</span>
+      <input
+        type="search"
+        name="busca"
+        [(ngModel)]="filtros.busca"
+        placeholder="Protocolo, título ou descrição..."
+      />
+    </label>
+
+    <label class="field">
+      <span>Status</span>
+      <select name="status" [(ngModel)]="filtros.status">
+        <option value="">Todos os status</option>
+        @for (opcao of statusOpcoes; track opcao.valor) {
+          <option [value]="opcao.valor">{{ opcao.rotulo }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Prioridade</span>
+      <select name="prioridade" [(ngModel)]="filtros.prioridade">
+        <option value="">Todas as prioridades</option>
+        @for (opcao of prioridadeOpcoes; track opcao.valor) {
+          <option [value]="opcao.valor">{{ opcao.rotulo }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Categoria</span>
+      <select name="categoria" [(ngModel)]="filtros.categoria">
+        <option value="">Todas as categorias</option>
+        @for (opcao of categoriaOpcoes; track opcao.valor) {
+          <option [value]="opcao.valor">{{ opcao.rotulo }}</option>
+        }
+      </select>
+    </label>
+
+    <div class="filter-actions">
+      <button class="btn btn-primary" type="submit">
+        <mat-icon>search</mat-icon>
+        Filtrar
+      </button>
+      <button class="btn btn-ghost" type="button" (click)="limparFiltros()">Limpar</button>
+    </div>
+  </form>
+</section>

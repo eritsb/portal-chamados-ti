@@ -1,21 +1,15 @@
 <div class="page">
-  <header class="page-header">
-    <div>
-      <a class="back-link" [routerLink]="linkLista()">
-        <mat-icon>arrow_back</mat-icon>
-        {{ ehSolicitante() ? 'Voltar para meus chamados' : 'Voltar para chamados' }}
-      </a>
-      <span class="eyebrow">{{ editando() ? 'ATUALIZAÇÃO' : 'NOVO REGISTRO' }}</span>
-      <h1 class="page-title">{{ editando() ? 'Editar chamado' : 'Abrir novo chamado' }}</h1>
-      <p class="page-subtitle">
-        {{
-          editando()
-            ? 'Atualize as informações do chamado selecionado.'
-            : 'Descreva o problema com o máximo de detalhes para agilizar o atendimento.'
-        }}
-      </p>
-    </div>
-  </header>
+  <app-page-header
+    [eyebrow]="editando() ? 'ATUALIZAÇÃO' : 'NOVO REGISTRO'"
+    [titulo]="editando() ? 'Editar chamado' : 'Abrir novo chamado'"
+    [subtitulo]="
+      editando()
+        ? 'Atualize as informações do chamado selecionado.'
+        : 'Descreva o problema com o máximo de detalhes para agilizar o atendimento.'
+    "
+    [voltarLink]="linkLista()"
+    [voltarRotulo]="ehSolicitante() ? 'Voltar para meus chamados' : 'Voltar para chamados'"
+  />
 
   @if (erro()) {
     <div class="status-msg error">{{ erro() }}</div>
@@ -55,7 +49,10 @@
               rows="5"
               placeholder="Descreva o que está acontecendo, mensagens de erro e quando o problema começou."
             ></textarea>
-            <small>Inclua o máximo de contexto possível. Isso ajuda a equipe de TI a resolver mais rápido.</small>
+            <small
+              >Inclua o máximo de contexto possível. Isso ajuda a equipe de TI a resolver mais
+              rápido.</small
+            >
           </label>
 
           <label class="field">
@@ -74,9 +71,7 @@
                 <option [ngValue]="opcao.valor">{{ opcao.rotulo }}</option>
               }
             </select>
-            <small>
-              SLA estimado: crítica 4h · alta 8h · média 24h · baixa 72h.
-            </small>
+            <small> SLA estimado: crítica 4h · alta 8h · média 24h · baixa 72h. </small>
           </label>
 
           <label class="field">

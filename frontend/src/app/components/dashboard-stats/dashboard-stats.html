@@ -1,0 +1,38 @@
+<section class="stats">
+  <article class="stat">
+    <span class="stat-icon blue"><mat-icon>confirmation_number</mat-icon></span>
+    <div>
+      <span>Total de chamados</span><strong>{{ dados().total }}</strong>
+    </div>
+  </article>
+  <article class="stat">
+    <span class="stat-icon sky"><mat-icon>inbox</mat-icon></span>
+    <div>
+      <span>Abertos</span><strong>{{ dados().abertos }}</strong>
+    </div>
+  </article>
+  <article class="stat">
+    <span class="stat-icon amber"><mat-icon>autorenew</mat-icon></span>
+    <div>
+      <span>Em andamento</span><strong>{{ dados().emAndamento }}</strong>
+    </div>
+  </article>
+  <article class="stat">
+    <span class="stat-icon green"><mat-icon>task_alt</mat-icon></span>
+    <div>
+      <span>Resolvidos</span><strong>{{ dados().resolvidos }}</strong>
+    </div>
+  </article>
+  <article class="stat">
+    <span class="stat-icon red"><mat-icon>priority_high</mat-icon></span>
+    <div>
+      <span>Prioridade crítica</span><strong>{{ dados().criticos }}</strong>
+    </div>
+  </article>
+  <article class="stat">
+    <span class="stat-icon violet"><mat-icon>timer_off</mat-icon></span>
+    <div>
+      <span>SLA violado</span><strong>{{ dados().slaViolados }}</strong>
+    </div>
+  </article>
+</section>

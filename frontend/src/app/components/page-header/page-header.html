@@ -1,0 +1,20 @@
+<header class="page-header">
+  <div class="page-heading">
+    @if (voltarLink()) {
+      <a class="back-link" [routerLink]="voltarLink()">
+        <mat-icon>arrow_back</mat-icon>
+        {{ voltarRotulo() }}
+      </a>
+    }
+    @if (eyebrow()) {
+      <span class="eyebrow">{{ eyebrow() }}</span>
+    }
+    <h1 class="page-title">{{ titulo() }}</h1>
+    @if (subtitulo()) {
+      <p class="page-subtitle">{{ subtitulo() }}</p>
+    }
+  </div>
+  <div class="page-actions">
+    <ng-content />
+  </div>
+</header>

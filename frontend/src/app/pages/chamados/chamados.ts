@@ -1,24 +1,15 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { PageHeader } from '../../components/page-header/page-header';
+import { TicketFilters } from '../../components/ticket-filters/ticket-filters';
+import { TicketTable } from '../../components/ticket-table/ticket-table';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { Chamado, FiltrosChamado } from '../../core/models';
-import {
-  CATEGORIA_OPCOES,
-  CATEGORIA_ROTULO,
-  PRIORIDADE_OPCOES,
-  PRIORIDADE_ROTULO,
-  STATUS_OPCOES,
-  STATUS_ROTULO,
-  formatarData,
-  prioridadeClass,
-  statusClass,
-} from '../../shared/constants';
 
 @Component({
-  imports: [FormsModule, MatIconModule, RouterLink],
+  imports: [MatIconModule, PageHeader, RouterLink, TicketFilters, TicketTable],
   selector: 'app-chamados',
   styleUrl: './chamados.css',
   templateUrl: './chamados.html',
@@ -32,16 +23,6 @@ export class Chamados implements OnInit {
   readonly erro = signal('');
   readonly total = computed(() => this.chamados().length);
   readonly podeExcluir = computed(() => this.authService.usuario()?.perfil === 'ADMINISTRADOR');
-
-  readonly statusOpcoes = STATUS_OPCOES;
-  readonly prioridadeOpcoes = PRIORIDADE_OPCOES;
-  readonly categoriaOpcoes = CATEGORIA_OPCOES;
-  readonly statusRotulo = STATUS_ROTULO;
-  readonly prioridadeRotulo = PRIORIDADE_ROTULO;
-  readonly categoriaRotulo = CATEGORIA_ROTULO;
-  readonly statusClass = statusClass;
-  readonly prioridadeClass = prioridadeClass;
-  readonly formatarData = formatarData;
 
   filtros: FiltrosChamado = {
     status: '',
@@ -67,6 +48,11 @@ export class Chamados implements OnInit {
         this.erro.set('Não foi possível carregar os chamados. Verifique a conexão com o backend.');
       },
     });
+  }
+
+  aplicarFiltros(filtros: FiltrosChamado): void {
+    this.filtros = filtros;
+    this.listar();
   }
 
   limparFiltros(): void {

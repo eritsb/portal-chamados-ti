@@ -2,22 +2,25 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { PriorityBadge } from '../../components/priority-badge/priority-badge';
+import { StatusBadge } from '../../components/status-badge/status-badge';
+import { TicketStatusForm } from '../../components/ticket-status-form/ticket-status-form';
+import { TicketTimeline } from '../../components/ticket-timeline/ticket-timeline';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { Chamado, StatusChamado, Usuario } from '../../core/models';
-import {
-  CATEGORIA_ROTULO,
-  PRIORIDADE_ROTULO,
-  STATUS_OPCOES,
-  STATUS_ROTULO,
-  formatarData,
-  iniciais,
-  prioridadeClass,
-  statusClass,
-} from '../../shared/constants';
+import { AtualizarStatusRequest, Chamado, Usuario } from '../../core/models';
+import { CATEGORIA_ROTULO, formatarData } from '../../shared/constants';
 
 @Component({
-  imports: [FormsModule, MatIconModule, RouterLink],
+  imports: [
+    FormsModule,
+    MatIconModule,
+    PriorityBadge,
+    RouterLink,
+    StatusBadge,
+    TicketStatusForm,
+    TicketTimeline,
+  ],
   selector: 'app-chamado-detalhe',
   styleUrl: './chamado-detalhe.css',
   templateUrl: './chamado-detalhe.html',
@@ -46,20 +49,8 @@ export class ChamadoDetalhe implements OnInit {
     this.ehSolicitante() ? 'Voltar para meus chamados' : 'Voltar para chamados',
   );
 
-  readonly statusOpcoes = STATUS_OPCOES;
-  readonly statusRotulo = STATUS_ROTULO;
-  readonly prioridadeRotulo = PRIORIDADE_ROTULO;
   readonly categoriaRotulo = CATEGORIA_ROTULO;
-  readonly statusClass = statusClass;
-  readonly prioridadeClass = prioridadeClass;
   readonly formatarData = formatarData;
-  readonly iniciais = iniciais;
-
-  formStatus = {
-    status: 'ABERTO' as StatusChamado,
-    tecnicoId: null as number | null,
-    solucao: '',
-  };
 
   comentario = {
     autor: this.authService.usuario()?.nome ?? '',
@@ -95,11 +86,6 @@ export class ChamadoDetalhe implements OnInit {
         }
 
         this.chamado.set(chamado);
-        this.formStatus = {
-          status: chamado.status,
-          tecnicoId: chamado.tecnicoId,
-          solucao: chamado.solucao ?? '',
-        };
         this.carregando.set(false);
       },
       error: () => {
@@ -109,7 +95,7 @@ export class ChamadoDetalhe implements OnInit {
     });
   }
 
-  atualizarStatus(): void {
+  atualizarStatus(request: AtualizarStatusRequest): void {
     const chamado = this.chamado();
     if (!chamado) {
       return;
@@ -119,23 +105,17 @@ export class ChamadoDetalhe implements OnInit {
     this.mensagemErro.set('');
     this.salvandoStatus.set(true);
 
-    this.api
-      .atualizarStatus(chamado.id, {
-        status: this.formStatus.status,
-        tecnicoId: this.formStatus.tecnicoId ? Number(this.formStatus.tecnicoId) : null,
-        solucao: this.formStatus.solucao.trim() || null,
-      })
-      .subscribe({
-        next: () => {
-          this.salvandoStatus.set(false);
-          this.mensagem.set('Status do chamado atualizado com sucesso.');
-          this.carregar();
-        },
-        error: () => {
-          this.salvandoStatus.set(false);
-          this.mensagemErro.set('Não foi possível atualizar o status do chamado.');
-        },
-      });
+    this.api.atualizarStatus(chamado.id, request).subscribe({
+      next: () => {
+        this.salvandoStatus.set(false);
+        this.mensagem.set('Status do chamado atualizado com sucesso.');
+        this.carregar();
+      },
+      error: () => {
+        this.salvandoStatus.set(false);
+        this.mensagemErro.set('Não foi possível atualizar o status do chamado.');
+      },
+    });
   }
 
   comentar(): void {

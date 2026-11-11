@@ -1,0 +1,43 @@
+<form class="status-form" (ngSubmit)="enviar()">
+  <label class="field">
+    <span>Status</span>
+    <select name="status" [(ngModel)]="formStatus.status">
+      @for (opcao of statusOpcoes; track opcao.valor) {
+        <option [ngValue]="opcao.valor">{{ opcao.rotulo }}</option>
+      }
+    </select>
+  </label>
+
+  <label class="field">
+    <span>Técnico responsável</span>
+    <select name="tecnicoId" [(ngModel)]="formStatus.tecnicoId">
+      <option [ngValue]="null">Não atribuído</option>
+      @for (usuario of usuarios(); track usuario.id) {
+        @if (usuario.perfil !== 'SOLICITANTE') {
+          <option [ngValue]="usuario.id">{{ usuario.nome }}</option>
+        }
+      }
+    </select>
+  </label>
+
+  <label class="field">
+    <span>Solução / observação</span>
+    <textarea
+      name="solucao"
+      [(ngModel)]="formStatus.solucao"
+      rows="3"
+      maxlength="2000"
+      placeholder="Descreva a solução aplicada, se houver."
+    ></textarea>
+  </label>
+
+  <button class="btn btn-primary full" type="submit" [disabled]="salvando()">
+    @if (salvando()) {
+      <span class="spinner"></span>
+      Salvando...
+    } @else {
+      <mat-icon>save</mat-icon>
+      Salvar atualização
+    }
+  </button>
+</form>
