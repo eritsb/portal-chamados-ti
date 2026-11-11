@@ -98,24 +98,30 @@ atribui responsáveis, registra soluções e acompanha indicadores de prazo (SLA
 
 ### 4.2 Frontend
 
-- **Core:** modelos TypeScript, serviço HTTP, serviço de autenticação e guard de rota.
+- **Core:** modelos TypeScript, serviço HTTP, serviço de autenticação e guards de rota.
 - **Shared:** rótulos, opções de formulário e funções utilitárias de formatação.
-- **Components:** `Shell` com sidebar, topbar e `router-outlet`.
-- **Pages:** Login, Dashboard, Lista de Chamados, Formulário e Detalhe do Chamado.
+- **Components:** `Shell` (sidebar, topbar e `router-outlet`), `PageHeader`, `StatusBadge`,
+  `PriorityBadge`, `TicketFilters`, `TicketTable`, `DashboardStats`, `TicketTimeline` e
+  `TicketStatusForm`.
+- **Pages:** Login, Dashboard, Lista de Chamados, Meus Chamados, Formulário e Detalhe do Chamado.
 
 ### 4.3 Rotas do frontend
 
-| Rota | Componente | Descrição |
-| --- | --- | --- |
-| `/login` | `Login` | Entrada no portal |
-| `/dashboard` | `Dashboard` | Indicadores e chamados recentes |
-| `/chamados` | `Chamados` | Lista com filtros |
-| `/chamados/novo` | `ChamadoForm` | Abertura de chamado |
-| `/chamados/:id` | `ChamadoDetalhe` | Detalhe, histórico e gestão |
-| `/chamados/:id/editar` | `ChamadoForm` | Edição do chamado |
+| Rota | Componente | Acesso | Descrição |
+| --- | --- | --- | --- |
+| `/login` | `Login` | Público | Entrada no portal |
+| `/dashboard` | `Dashboard` | Administrador | Indicadores e chamados recentes |
+| `/meus-chamados` | `MeusChamados` | Solicitante | Chamados abertos pelo usuário logado |
+| `/meus-chamados/:id` | `ChamadoDetalhe` | Solicitante | Detalhe de um chamado do próprio solicitante |
+| `/chamados` | `Chamados` | Técnico e administrador | Fila geral com filtros |
+| `/chamados/novo` | `ChamadoForm` | Autenticado | Abertura de chamado |
+| `/chamados/:id` | `ChamadoDetalhe` | Autenticado | Detalhe, histórico e gestão |
+| `/chamados/:id/editar` | `ChamadoForm` | Técnico e administrador | Edição do chamado |
 
 Rotas internas são protegidas pelo `authGuard`, que verifica a sessão armazenada em
-`sessionStorage`.
+`sessionStorage`. Os guards `dashboardGuard`, `staffGuard` e `solicitanteGuard` aplicam as
+restrições por perfil. O detalhe também valida, no frontend, que o solicitante só acesse os
+próprios chamados.
 
 ## 5. Modelo de dados
 
@@ -176,7 +182,7 @@ Base URL: `http://localhost:8080`
 `POST /auth/login`
 
 ```json
-{ "email": "felipe@senac.pe.gov.br" }
+{ "email": "kennedy@senac.pe.gov.br" }
 ```
 
 Resposta `200 OK`:
@@ -198,9 +204,10 @@ Resposta `200 OK`:
 
 ### 6.3 Listagem de chamados
 
-`GET /chamados?status=ABERTO&prioridade=ALTA&categoria=HARDWARE&busca=impressora`
+`GET /chamados?status=ABERTO&prioridade=ALTA&categoria=HARDWARE&tecnicoId=2&busca=impressora`
 
-Todos os parâmetros são opcionais. A busca textual considera protocolo, título e descrição.
+Todos os parâmetros são opcionais e combináveis. A busca textual considera protocolo, título e
+descrição, sem diferenciar maiúsculas de minúsculas.
 
 ### 6.4 Detalhe
 
@@ -239,6 +246,9 @@ Resposta `201 Created` com o chamado criado e protocolo gerado.
   "solucao": "Fonte substituída e equipamento testado."
 }
 ```
+
+Reabertura: `PATCH /chamados/{id}/reabrir`. Apenas chamados `RESOLVIDO` ou `FECHADO` podem ser
+reabertos; o status volta para `EM_ANDAMENTO` e a data de fechamento é limpa.
 
 ### 6.8 Comentários
 

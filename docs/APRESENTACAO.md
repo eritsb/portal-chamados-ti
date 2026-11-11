@@ -33,19 +33,20 @@ Duração sugerida: 10 a 15 minutos + perguntas.
    - protocolo, status, prioridade e SLA;
    - descrição e histórico;
    - informações do solicitante e técnico.
-5. Fazer login como **técnico** (`felipe@senac.pe.gov.br`) e:
+5. Fazer login como **técnico** (`kennedy@senac.pe.gov.br`) e:
    - alterar o status para “Em andamento”;
    - atribuir-se como responsável;
    - registrar uma solução e mudar para “Resolvido”.
 6. Adicionar um **comentário** e mostrar o histórico atualizado.
-7. Abrir **Novo chamado** e cadastrar uma solicitação, evidenciando:
+7. Sair e entrar novamente como **administrador** (`ericha@senac.pe.gov.br`).
+8. Abrir **Novo chamado** e cadastrar uma solicitação, evidenciando:
    - categoria e prioridade;
    - seleção de solicitante/técnico;
    - protocolo gerado automaticamente.
-8. Voltar ao dashboard e mostrar os indicadores atualizados.
-9. (Opcional) Abrir o **H2 Console** e consultar as tabelas `CHAMADOS`, `USUARIOS` e
-   `COMENTARIOS`.
-10. (Opcional) Mostrar o console do navegador com as chamadas HTTP para a API.
+9. Voltar ao dashboard e mostrar os indicadores atualizados.
+10. (Opcional) Abrir o **H2 Console** e consultar as tabelas `CHAMADOS`, `USUARIOS` e
+    `COMENTARIOS`.
+11. (Opcional) Mostrar o console do navegador com as chamadas HTTP para a API.
 
 ## 3. Pontos técnicos para explicar
 
