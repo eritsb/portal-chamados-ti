@@ -1,0 +1,82 @@
+:host {
+  display: block;
+}
+
+.protocol {
+  display: inline-block;
+  color: var(--brand-600);
+  font-size: 11.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.protocol:hover,
+.subject:hover {
+  text-decoration: underline;
+}
+
+.sla-tag {
+  margin-left: 5px;
+  padding: 3px 6px;
+  font-size: 9px;
+}
+
+.subject {
+  display: block;
+  max-width: 320px;
+  overflow: hidden;
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+tbody small {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 10.5px;
+}
+
+.person {
+  color: #3f5364;
+  font-size: 12px;
+}
+
+.unassigned {
+  color: #97a7b5;
+  font-size: 11.5px;
+  font-style: italic;
+}
+
+.date {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.actions-col {
+  text-align: right;
+}
+
+.actions {
+  justify-content: flex-end;
+}
+
+.empty-state a {
+  margin-left: 4px;
+  color: var(--brand-600);
+  font-weight: 600;
+}
+
+.empty-state a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 620px) {
+  .actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

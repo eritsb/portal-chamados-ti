@@ -1,20 +1,20 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { DashboardStats } from '../../components/dashboard-stats/dashboard-stats';
+import { PageHeader } from '../../components/page-header/page-header';
+import { TicketTable } from '../../components/ticket-table/ticket-table';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { CategoriaChamado, Dashboard as DashboardDados, PrioridadeChamado } from '../../core/models';
 import {
-  CATEGORIA_ROTULO,
-  PRIORIDADE_ROTULO,
-  STATUS_ROTULO,
-  formatarData,
-  prioridadeClass,
-  statusClass,
-} from '../../shared/constants';
+  CategoriaChamado,
+  Dashboard as DashboardDados,
+  PrioridadeChamado,
+} from '../../core/models';
+import { CATEGORIA_ROTULO, PRIORIDADE_ROTULO, prioridadeClass } from '../../shared/constants';
 
 @Component({
-  imports: [MatIconModule, RouterLink],
+  imports: [DashboardStats, MatIconModule, PageHeader, RouterLink, TicketTable],
   selector: 'app-dashboard',
   styleUrl: './dashboard.css',
   templateUrl: './dashboard.html',
@@ -30,10 +30,6 @@ export class Dashboard implements OnInit {
   readonly usuario = this.authService.usuario;
   readonly categoriaRotulo = CATEGORIA_ROTULO;
   readonly prioridadeRotulo = PRIORIDADE_ROTULO;
-  readonly statusRotulo = STATUS_ROTULO;
-  readonly statusClass = statusClass;
-  readonly prioridadeClass = prioridadeClass;
-  readonly formatarData = formatarData;
 
   readonly saudacao = computed(() => {
     const hora = new Date().getHours();
@@ -44,6 +40,11 @@ export class Dashboard implements OnInit {
       return 'Boa tarde';
     }
     return 'Boa noite';
+  });
+
+  readonly titulo = computed(() => {
+    const nome = this.usuario()?.nome?.split(' ')[0] ?? '';
+    return `${this.saudacao()}, ${nome}`;
   });
 
   readonly maiorCategoria = computed(() => {
@@ -65,7 +66,9 @@ export class Dashboard implements OnInit {
       },
       error: () => {
         this.carregando.set(false);
-        this.erro.set('Não foi possível carregar os indicadores. Verifique se o backend está em execução.');
+        this.erro.set(
+          'Não foi possível carregar os indicadores. Verifique se o backend está em execução.',
+        );
       },
     });
   }

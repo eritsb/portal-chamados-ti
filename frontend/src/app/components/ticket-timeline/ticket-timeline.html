@@ -1,0 +1,38 @@
+<div class="timeline">
+  <div class="timeline-item">
+    <span class="timeline-avatar system"><mat-icon>confirmation_number</mat-icon></span>
+    <div class="timeline-body">
+      <div class="timeline-top">
+        <strong>Chamado aberto</strong>
+        <span>{{ formatarData(chamado().dataAbertura) }}</span>
+      </div>
+      <p>{{ chamado().solicitanteNome }} registrou a solicitação.</p>
+    </div>
+  </div>
+
+  @for (comentario of chamado().comentarios; track comentario.id) {
+    <div class="timeline-item">
+      <span class="timeline-avatar">{{ iniciais(comentario.autor) }}</span>
+      <div class="timeline-body">
+        <div class="timeline-top">
+          <strong>{{ comentario.autor }}</strong>
+          <span>{{ formatarData(comentario.dataComentario) }}</span>
+        </div>
+        <p>{{ comentario.mensagem }}</p>
+      </div>
+    </div>
+  }
+
+  @if (chamado().dataFechamento) {
+    <div class="timeline-item">
+      <span class="timeline-avatar done"><mat-icon>done_all</mat-icon></span>
+      <div class="timeline-body">
+        <div class="timeline-top">
+          <strong>Chamado concluído</strong>
+          <span>{{ formatarData(chamado().dataFechamento) }}</span>
+        </div>
+        <p>Solicitação finalizada pela equipe de TI.</p>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,105 @@
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Protocolo</th>
+        <th>Assunto</th>
+        @if (modo() !== 'solicitante') {
+          <th>Solicitante</th>
+        }
+        @if (modo() === 'gestao') {
+          <th>Técnico</th>
+        }
+        <th>Prioridade</th>
+        <th>Status</th>
+        <th>Abertura</th>
+        @if (modo() !== 'recentes') {
+          <th class="actions-col">{{ modo() === 'solicitante' ? 'Ação' : 'Ações' }}</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (chamado of chamados(); track chamado.id) {
+        <tr>
+          <td>
+            <a class="protocol" [routerLink]="[linkDetalhe(), chamado.id]">
+              {{ chamado.protocolo }}
+            </a>
+            @if (chamado.slaViolado && modo() !== 'recentes') {
+              <span class="badge b-sla sla-tag">SLA</span>
+            }
+          </td>
+          <td class="subject-cell">
+            <a class="subject" [routerLink]="[linkDetalhe(), chamado.id]">
+              {{ chamado.titulo }}
+            </a>
+            <small>{{ categoriaRotulo[chamado.categoria] }}</small>
+          </td>
+          @if (modo() !== 'solicitante') {
+            <td>
+              <span class="person">{{ chamado.solicitanteNome }}</span>
+              @if (modo() === 'gestao') {
+                <small>{{ chamado.solicitanteSetor }}</small>
+              }
+            </td>
+          }
+          @if (modo() === 'gestao') {
+            <td>
+              @if (chamado.tecnicoNome) {
+                <span class="person">{{ chamado.tecnicoNome }}</span>
+              } @else {
+                <span class="unassigned">Não atribuído</span>
+              }
+            </td>
+          }
+          <td>
+            <app-priority-badge [prioridade]="chamado.prioridade" />
+          </td>
+          <td>
+            <app-status-badge [status]="chamado.status" />
+          </td>
+          <td class="date">{{ formatarData(chamado.dataAbertura) }}</td>
+          @if (modo() !== 'recentes') {
+            <td>
+              <div class="actions">
+                @if (modo() === 'solicitante') {
+                  <a class="btn btn-ghost btn-sm" [routerLink]="[linkDetalhe(), chamado.id]">
+                    Ver detalhes
+                  </a>
+                } @else {
+                  <a class="btn btn-ghost btn-sm" [routerLink]="[linkDetalhe(), chamado.id]">
+                    Ver
+                  </a>
+                  <a
+                    class="btn btn-ghost btn-sm"
+                    [routerLink]="[linkDetalhe(), chamado.id, 'editar']"
+                  >
+                    Editar
+                  </a>
+                  @if (podeExcluir()) {
+                    <button
+                      class="btn btn-danger btn-sm"
+                      type="button"
+                      (click)="excluir.emit(chamado)"
+                    >
+                      Excluir
+                    </button>
+                  }
+                }
+              </div>
+            </td>
+          }
+        </tr>
+      } @empty {
+        <tr>
+          <td class="empty-state" [attr.colspan]="colspan()">
+            {{ mensagemVazia() }}
+            @if (vazioLink()) {
+              <a [routerLink]="vazioLink()">{{ vazioLinkRotulo() }}</a>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

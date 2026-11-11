@@ -1,69 +1,16 @@
 <div class="page">
-  <header class="page-header">
-    <div>
-      <span class="eyebrow">CENTRAL DE ATENDIMENTO</span>
-      <h1 class="page-title">Chamados de TI</h1>
-      <p class="page-subtitle">
-        Consulte, filtre e acompanhe todas as solicitações registradas na instituição.
-      </p>
-    </div>
+  <app-page-header
+    eyebrow="CENTRAL DE ATENDIMENTO"
+    titulo="Chamados de TI"
+    subtitulo="Consulte, filtre e acompanhe todas as solicitações registradas na instituição."
+  >
     <a class="btn btn-primary" routerLink="/chamados/novo">
       <mat-icon>add</mat-icon>
       Abrir chamado
     </a>
-  </header>
+  </app-page-header>
 
-  <section class="card filters">
-    <form (ngSubmit)="listar()">
-      <label class="field search-field">
-        <span>Buscar</span>
-        <input
-          type="search"
-          name="busca"
-          [(ngModel)]="filtros.busca"
-          placeholder="Protocolo, título ou descrição..."
-        />
-      </label>
-
-      <label class="field">
-        <span>Status</span>
-        <select name="status" [(ngModel)]="filtros.status">
-          <option value="">Todos os status</option>
-          @for (opcao of statusOpcoes; track opcao.valor) {
-            <option [value]="opcao.valor">{{ opcao.rotulo }}</option>
-          }
-        </select>
-      </label>
-
-      <label class="field">
-        <span>Prioridade</span>
-        <select name="prioridade" [(ngModel)]="filtros.prioridade">
-          <option value="">Todas as prioridades</option>
-          @for (opcao of prioridadeOpcoes; track opcao.valor) {
-            <option [value]="opcao.valor">{{ opcao.rotulo }}</option>
-          }
-        </select>
-      </label>
-
-      <label class="field">
-        <span>Categoria</span>
-        <select name="categoria" [(ngModel)]="filtros.categoria">
-          <option value="">Todas as categorias</option>
-          @for (opcao of categoriaOpcoes; track opcao.valor) {
-            <option [value]="opcao.valor">{{ opcao.rotulo }}</option>
-          }
-        </select>
-      </label>
-
-      <div class="filter-actions">
-        <button class="btn btn-primary" type="submit">
-          <mat-icon>search</mat-icon>
-          Filtrar
-        </button>
-        <button class="btn btn-ghost" type="button" (click)="limparFiltros()">Limpar</button>
-      </div>
-    </form>
-  </section>
+  <app-ticket-filters (filtrar)="aplicarFiltros($event)" (limpar)="limparFiltros()" />
 
   @if (erro()) {
     <div class="status-msg error">{{ erro() }}</div>
@@ -80,78 +27,12 @@
       }
     </header>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Protocolo</th>
-            <th>Assunto</th>
-            <th>Solicitante</th>
-            <th>Técnico</th>
-            <th>Prioridade</th>
-            <th>Status</th>
-            <th>Abertura</th>
-            <th class="actions-col">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (chamado of chamados(); track chamado.id) {
-            <tr>
-              <td>
-                <a class="protocol" [routerLink]="['/chamados', chamado.id]">{{ chamado.protocolo }}</a>
-                @if (chamado.slaViolado) {
-                  <span class="badge b-sla sla-tag">SLA</span>
-                }
-              </td>
-              <td class="subject-cell">
-                <a class="subject" [routerLink]="['/chamados', chamado.id]">{{ chamado.titulo }}</a>
-                <small>{{ categoriaRotulo[chamado.categoria] }}</small>
-              </td>
-              <td>
-                <span class="person">{{ chamado.solicitanteNome }}</span>
-                <small>{{ chamado.solicitanteSetor }}</small>
-              </td>
-              <td>
-                @if (chamado.tecnicoNome) {
-                  <span class="person">{{ chamado.tecnicoNome }}</span>
-                } @else {
-                  <span class="unassigned">Não atribuído</span>
-                }
-              </td>
-              <td>
-                <span class="badge {{ prioridadeClass(chamado.prioridade) }}">
-                  {{ prioridadeRotulo[chamado.prioridade] }}
-                </span>
-              </td>
-              <td>
-                <span class="badge {{ statusClass(chamado.status) }}">
-                  {{ statusRotulo[chamado.status] }}
-                </span>
-              </td>
-              <td class="date">{{ formatarData(chamado.dataAbertura) }}</td>
-              <td>
-                <div class="actions">
-                  <a class="btn btn-ghost btn-sm" [routerLink]="['/chamados', chamado.id]">Ver</a>
-                  <a class="btn btn-ghost btn-sm" [routerLink]="['/chamados', chamado.id, 'editar']">
-                    Editar
-                  </a>
-                  @if (podeExcluir()) {
-                    <button class="btn btn-danger btn-sm" type="button" (click)="excluir(chamado)">
-                      Excluir
-                    </button>
-                  }
-                </div>
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td class="empty-state" colspan="8">
-                Nenhum chamado encontrado com os filtros selecionados.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <app-ticket-table
+      modo="gestao"
+      [chamados]="chamados()"
+      [podeExcluir]="podeExcluir()"
+      mensagemVazia="Nenhum chamado encontrado com os filtros selecionados."
+      (excluir)="excluir($event)"
+    />
   </section>
 </div>

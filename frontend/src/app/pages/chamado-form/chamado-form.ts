@@ -2,13 +2,14 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { PageHeader } from '../../components/page-header/page-header';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { ChamadoRequest, Usuario } from '../../core/models';
 import { CATEGORIA_OPCOES, PRIORIDADE_OPCOES, PRIORIDADE_ROTULO } from '../../shared/constants';
 
 @Component({
-  imports: [FormsModule, MatIconModule, RouterLink],
+  imports: [FormsModule, MatIconModule, PageHeader, RouterLink],
   selector: 'app-chamado-form',
   styleUrl: './chamado-form.css',
   templateUrl: './chamado-form.html',
@@ -134,7 +135,11 @@ export class ChamadoForm implements OnInit {
       descricao: this.chamado.descricao.trim(),
       solicitanteId: ehSolicitante && usuario ? usuario.id : this.chamado.solicitanteId,
       local: this.chamado.local?.trim() ? this.chamado.local.trim() : null,
-      tecnicoId: ehSolicitante ? null : this.chamado.tecnicoId ? Number(this.chamado.tecnicoId) : null,
+      tecnicoId: ehSolicitante
+        ? null
+        : this.chamado.tecnicoId
+          ? Number(this.chamado.tecnicoId)
+          : null,
     };
 
     const id = this.id();
@@ -144,9 +149,7 @@ export class ChamadoForm implements OnInit {
     requisicao.subscribe({
       next: (chamado) =>
         this.router.navigate(
-          this.ehSolicitante()
-            ? ['/meus-chamados', chamado.id]
-            : ['/chamados', chamado.id],
+          this.ehSolicitante() ? ['/meus-chamados', chamado.id] : ['/chamados', chamado.id],
         ),
       error: (erro) => {
         this.salvando.set(false);

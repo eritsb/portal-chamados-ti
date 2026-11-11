@@ -5,84 +5,6 @@
   gap: 14px;
 }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.stat {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  padding: 16px 14px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-}
-
-.stat-icon {
-  display: grid;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 11px;
-}
-
-.stat-icon .material-icons {
-  font-size: 21px;
-}
-
-.stat-icon.blue {
-  background: var(--brand-100);
-  color: var(--brand-700);
-}
-
-.stat-icon.sky {
-  background: var(--info-soft);
-  color: var(--info);
-}
-
-.stat-icon.amber {
-  background: var(--warning-soft);
-  color: var(--warning);
-}
-
-.stat-icon.green {
-  background: var(--success-soft);
-  color: var(--success);
-}
-
-.stat-icon.red {
-  background: var(--danger-soft);
-  color: var(--danger);
-}
-
-.stat-icon.violet {
-  background: #f0ecfb;
-  color: #6a4fb3;
-}
-
-.stat div {
-  display: grid;
-  line-height: 1.2;
-}
-
-.stat div span {
-  color: var(--muted);
-  font-size: 10.5px;
-}
-
-.stat div strong {
-  margin-top: 4px;
-  color: var(--brand-900);
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
-}
-
 .panels {
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
@@ -227,42 +149,6 @@
   padding-bottom: 8px;
 }
 
-.protocol {
-  color: var(--brand-600);
-  font-weight: 700;
-  font-size: 12px;
-}
-
-.subject {
-  display: block;
-  color: var(--text);
-  font-weight: 600;
-}
-
-.subject:hover,
-.protocol:hover {
-  text-decoration: underline;
-}
-
-tbody small {
-  display: block;
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: 10.5px;
-}
-
-.date {
-  color: var(--muted);
-  font-size: 11.5px;
-  white-space: nowrap;
-}
-
-@media (max-width: 1220px) {
-  .stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 900px) {
   .panels {
     grid-template-columns: 1fr;
@@ -270,10 +156,6 @@ tbody small {
 }
 
 @media (max-width: 620px) {
-  .stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .bar-row {
     grid-template-columns: 92px minmax(0, 1fr) 20px;
   }
